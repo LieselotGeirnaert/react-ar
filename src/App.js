@@ -1,23 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { Html, useProgress } from "@react-three/drei";
+// components
+import { db } from "./firebase-config";
+// styling
+import "./App.css";
 
-function App() {
+const Loader = () => {
+  const { progress } = useProgress();
+  return <Html center>{progress} % loaded</Html>;
+};
+
+const App = () => {
+  const [planets, setPlanets] = useState([]);
+  const planetsCollectionRef = collection(db, "planets");
+
+  useEffect(() => {
+    const getPlanets = async () => {
+      const data = await getDocs(planetsCollectionRef);
+      setPlanets(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    getPlanets();
+  }, []);
+
+  console.log(planets);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>test</p>
     </div>
   );
 }
