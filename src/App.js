@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import {
   collection,
   getDocs,
@@ -8,10 +8,13 @@ import {
   doc,
 } from "firebase/firestore";
 import { Html, useProgress } from "@react-three/drei";
+import { ARCanvas, DefaultXRControllers } from "@react-three/xr";
 // components
 import { db } from "./firebase-config";
+import CustomPlanet from "./components/customPlanet";
 // styling
 import "./App.css";
+import { Canvas } from "@react-three/fiber";
 
 const Loader = () => {
   const { progress } = useProgress();
@@ -31,12 +34,21 @@ const App = () => {
     getPlanets();
   }, []);
 
-  console.log(planets);
   return (
-    <div className="App">
-      <p>test</p>
-    </div>
+    <ARCanvas>
+      <ambientLight intensity={0.2} />
+      <directionalLight position={[0, 0, 5]} />
+      <Suspense fallback={<Loader />}>
+        {planets.map((item, index) => (
+          <CustomPlanet
+            key={index}
+            name={item.title}
+            location={[item.locationX, item.locationY, item.locationZ]}
+          />
+        ))}
+      </Suspense>
+    </ARCanvas>
   );
-}
+};
 
 export default App;

@@ -1,13 +1,14 @@
 import { useTexture } from "@react-three/drei";
 
-const CustomPlanet = ({ name }) => {
+const CustomPlanet = ({ name, location }) => {
   const marsTexture = useTexture(`assets/img/planets/${name}.jpeg`);
 
+  console.log(name);
+  console.log(location);
   return (
     <>
-      {/* <ambientLight intensity={0.2} />
-      <directionalLight position={[0, 0, 5]} /> */}
-      <mesh position={[0, 0, 0]}>
+      
+      <mesh position={location}>
         <sphereGeometry args={[0.1, 32, 16]} />
         <meshStandardMaterial map={marsTexture} />
       </mesh>
